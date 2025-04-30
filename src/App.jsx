@@ -13,7 +13,7 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyle />
-            <BrowserRouter>
+            <BrowserRouter basename="/welfare_plus_app">
                 <AppLayout>
                     <Routes>
                         <Route path="/" element={<MainPage />} />
