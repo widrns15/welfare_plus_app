@@ -14,15 +14,18 @@ const Title = styled.h2`
 `;
 
 const Card = styled.div`
-    background-color: ${({ theme }) => theme.colors.card};
+    background-color: ${({ theme }) => theme.colors.surface};
+    border: 1px solid ${({ theme }) => theme.colors.border};
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: 0.2s;
     cursor: pointer;
-    transition: background 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
     &:hover {
-        background-color: ${({ theme }) => theme.colors.background};
+        background-color: ${({ theme }) => theme.colors.surfaceHover};
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 `;
 
