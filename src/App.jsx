@@ -1,9 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-//import MainPage from "./pages/MainPage";
-//import SearchResultPage from "./pages/SearchResultPage";
-//import ServiceDetailPage from "./pages/ServiceDetailPage";
-//import FavoritePage from "./pages/FavoritePage";
-//import SettingsPage from "./pages/SettingsPage";
+import MainPage from "./pages/MainPage";
+import SearchResultPage from "./pages/SearchResultPage";
+import FacilityDetailPage from "./pages/FacilityDetailPage";
 
 function App() {
     return (
@@ -11,9 +9,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/results" element={<SearchResultPage />} />
-                <Route path="/service/:id" element={<ServiceDetailPage />} />
-                <Route path="/favorites" element={<FavoritePage />} />
-                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/facility/:id" element={<FacilityDetailPage />} />
             </Routes>
         </BrowserRouter>
     );
