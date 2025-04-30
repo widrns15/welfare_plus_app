@@ -1,6 +1,44 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getWelfareFacilities } from "../api/welfare";
+import styled from "styled-components";
+
+const Container = styled.div`
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 2rem;
+`;
+
+const Title = styled.h2`
+    margin-bottom: 1.5rem;
+`;
+
+const Card = styled.div`
+    background-color: ${({ theme }) => theme.colors.card};
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: background 0.2s;
+    &:hover {
+        background-color: ${({ theme }) => theme.colors.background};
+    }
+`;
+
+const CardText = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+`;
+
+const LoadingSkeleton = styled.div`
+    background-color: #ddd;
+    height: 80px;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+`;
 
 function SearchResultPage() {
     const location = useLocation();
@@ -41,52 +79,28 @@ function SearchResultPage() {
     };
 
     return (
-        <div className="container">
-            <h2>검색 결과</h2>
+        <Container>
+            <Title>검색 결과</Title>
             {loading ? (
-                <div className="section">
-                    {[...Array(3)].map((_, i) => (
-                        <div
-                            key={i}
-                            className="card"
-                            style={{
-                                opacity: 0.4,
-                                background: "#ddd",
-                                height: "80px",
-                            }}
-                        />
-                    ))}
-                </div>
+                [...Array(3)].map((_, i) => <LoadingSkeleton key={i} />)
             ) : results.length > 0 ? (
                 results.map((item, idx) => (
-                    <div
-                        key={idx}
-                        className="card"
-                        onClick={() => handleClick(item)}
-                    >
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "4px",
-                            }}
-                        >
-                            <strong style={{ fontSize: "16px" }}>
-                                {item.FCLT_NM}
-                            </strong>
+                    <Card key={idx} onClick={() => handleClick(item)}>
+                        <CardText>
+                            <strong>{item.FCLT_NM}</strong>
                             <span style={{ fontSize: "14px", color: "#555" }}>
                                 {item.FCLT_KIND_NM}
                             </span>
                             <span style={{ fontSize: "13px", color: "#777" }}>
                                 {item.FCLT_ADDR || item.REFINE_ROADNM_ADDR}
                             </span>
-                        </div>
-                    </div>
+                        </CardText>
+                    </Card>
                 ))
             ) : (
                 <p>검색 조건에 맞는 결과가 없습니다.</p>
             )}
-        </div>
+        </Container>
     );
 }
 

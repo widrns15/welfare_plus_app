@@ -1,76 +1,111 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
-function FacilityDetailPage() {
-    const location = useLocation();
-    const facility = location.state?.facility;
+const Container = styled.div`
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 2rem;
+`;
 
-    useEffect(() => {
-        if (!window.kakao?.maps || !facility?.FCLT_ADDR) return;
+const Section = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+`;
 
-        const mapContainer = document.getElementById("map");
-        const mapOption = {
-            center: new window.kakao.maps.LatLng(37.5665, 126.978),
-            level: 3,
-        };
-        const map = new window.kakao.maps.Map(mapContainer, mapOption);
+const Label = styled.label`
+    font-weight: bold;
+`;
 
-        const geocoder = new window.kakao.maps.services.Geocoder();
-        geocoder.addressSearch(facility.FCLT_ADDR, function (result, status) {
-            if (status === window.kakao.maps.services.Status.OK) {
-                const coords = new window.kakao.maps.LatLng(
-                    result[0].y,
-                    result[0].x
-                );
-                new window.kakao.maps.Marker({ map, position: coords });
-                map.setCenter(coords);
-            } else {
-                console.warn("주소를 지도에서 찾을 수 없습니다.");
-            }
-        });
-    }, [facility]);
+const Input = styled.input`
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid ${({ theme }) => theme.colors.border};
+`;
 
-    if (!facility)
-        return <div className="container">시설 정보를 불러올 수 없습니다.</div>;
+const Select = styled.select`
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const Button = styled.button`
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: white;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+`;
+
+const Error = styled.p`
+    color: red;
+    font-size: 14px;
+`;
+
+function MainPage() {
+    const navigate = useNavigate();
+    const [gu] = useState("동작구");
+    const [name, setName] = useState("");
+    const [type, setType] = useState("");
+    const [error, setError] = useState("");
+
+    const handleSearch = () => {
+        if (!name.trim()) {
+            setError("시설명을 입력해주세요.");
+            return;
+        }
+        setError("");
+        navigate(
+            `/results?gu=${gu}&name=${encodeURIComponent(
+                name
+            )}&type=${encodeURIComponent(type)}`
+        );
+    };
 
     return (
-        <div className="container">
-            <h2 style={{ marginBottom: "1rem" }}>{facility.FCLT_NM}</h2>
+        <Container>
+            <h1 style={{ marginBottom: "1.5rem" }}>복지 플러스</h1>
+            <Section>
+                <div>
+                    <Label htmlFor="gu">구 선택</Label>
+                    <Select id="gu" value={gu} disabled>
+                        <option value="동작구">동작구</option>
+                    </Select>
+                </div>
 
-            <div
-                className="section"
-                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-                <p>
-                    <strong>시설 종류:</strong> {facility.FCLT_KIND_NM}
-                </p>
-                <p>
-                    <strong>상세 분류:</strong> {facility.FCLT_KIND_DTL_NM}
-                </p>
-                <p>
-                    <strong>대표자명:</strong> {facility.RPRSNTV}
-                </p>
-                <p>
-                    <strong>주소:</strong> {facility.FCLT_ADDR}
-                </p>
-                <p>
-                    <strong>연락처:</strong>{" "}
-                    {facility.FCLT_TEL_NO ? (
-                        <a href={`tel:${facility.FCLT_TEL_NO}`}>
-                            {facility.FCLT_TEL_NO}
-                        </a>
-                    ) : (
-                        "정보 없음"
-                    )}
-                </p>
-            </div>
+                <div>
+                    <Label htmlFor="name">
+                        시설명 <span style={{ color: "red" }}>*</span>
+                    </Label>
+                    <Input
+                        id="name"
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="예: 실버센터"
+                        required
+                    />
+                </div>
 
-            <div
-                id="map"
-                style={{ width: "100%", height: "300px", marginTop: "1.5rem" }}
-            ></div>
-        </div>
+                <div>
+                    <Label htmlFor="type">시설 종류명</Label>
+                    <Input
+                        id="type"
+                        type="text"
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
+                        placeholder="예: 노인요양시설"
+                    />
+                </div>
+
+                {error && <Error>{error}</Error>}
+
+                <Button onClick={handleSearch}>검색</Button>
+            </Section>
+        </Container>
     );
 }
 
-export default FacilityDetailPage;
+export default MainPage;
