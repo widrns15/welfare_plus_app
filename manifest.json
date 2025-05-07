@@ -1,7 +1,7 @@
 {
     "name": "Welfare Plus",
     "short_name": "Welfare+",
-    "start_url": "//",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#FF6F61",
